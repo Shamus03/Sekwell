@@ -67,7 +67,7 @@ namespace Sekwell
                 {
                     (string nestedSql, object[] nestedParams) = inner.ToSql();
                     formatArgs.Add(nestedSql);
-                    foreach (DbParameter parm in nestedParams)
+                    foreach (object parm in nestedParams)
                     {
                         parameters.Add(parm);
                     }

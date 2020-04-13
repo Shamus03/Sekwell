@@ -46,6 +46,21 @@ namespace Sekwell.Tests
         }
 
         [Test]
+        public void Subquery()
+        {
+            Statement someSubquery = new Statement($"SELECT * FROM WHATEVER WHERE DELETED={0}");
+            Statement query = new Statement($"SELECT * FROM SOMETABLE WHERE MYTHING IN ({someSubquery})");
+            (string sql, object[] parms) = query.ToSql();
+
+            Assert.That(sql, Is.EqualTo("SELECT * FROM SOMETABLE WHERE MYTHING IN (SELECT * FROM WHATEVER WHERE DELETED=?)"));
+            Assert.That(parms, Has.Length.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(parms[0], Is.EqualTo(0));
+            });
+        }
+
+        [Test]
         public void Append_Empty()
         {
             Statement query;

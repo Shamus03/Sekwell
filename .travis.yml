@@ -14,3 +14,7 @@ deploy:
   skip_cleanup: true
   provider: script
   script: dotnet nuget push Sekwell/bin/Release/Sekwell.*.nupkg -s "$NUGET_SOURCE" -k "$NUGET_API_KEY"
+
+notifications:
+  email:
+    on_failure: always

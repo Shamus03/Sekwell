@@ -3,18 +3,14 @@ mono: none
 dotnet: 3.1
 
 install:
-- dotnet restore
+ - dotnet restore
 
 script:
- - dotnet build -c Release
+ - dotnet build -c Release -p:Version="1.0.$TRAVIS_BUILD_NUMBER"
  - dotnet test
- - dotnet pack
 
 deploy:
   skip_cleanup: true
   provider: script
   script: dotnet nuget push Sekwell/bin/Release/Sekwell.*.nupkg -s "$NUGET_SOURCE" -k "$NUGET_API_KEY"
 
-notifications:
-  email:
-    on_failure: always

@@ -1,0 +1,16 @@
+language: csharp
+mono: none
+dotnet: 2.1.0
+
+install:
+- dotnet restore
+
+script:
+ - dotnet build -c Release
+ - dotnet test
+ - dotnet pack
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: dotnet nuget push Sekwell/bin/Release/Sekwell.*.nupkg -s "$NUGET_SOURCE" -k "$NUGET_API_KEY"

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sekwell
 {
@@ -101,36 +100,6 @@ namespace Sekwell
             }
             cmd.CommandText = stmtText;
             return cmd;
-        }
-
-        public async Task<T[]> QueryAsync<T>(DbConnection conn, Func<DbDataReader, T> map)
-        {
-            List<T> results = new List<T>();
-            using (DbCommand cmd = Compile(conn))
-            using (DbDataReader reader = await cmd.ExecuteReaderAsync())
-            {
-                while (await reader.ReadAsync())
-                {
-                    results.Add(map(reader));
-                }
-            }
-            return results.ToArray();
-        }
-
-        public async Task<int> ExecuteNonQueryAsync(DbConnection conn)
-        {
-            using (DbCommand cmd = Compile(conn))
-            {
-                return await cmd.ExecuteNonQueryAsync();
-            }
-        }
-
-        public async Task<object> ExecuteScalarAsync(DbConnection conn)
-        {
-            using (DbCommand cmd = Compile(conn))
-            {
-                return await cmd.ExecuteScalarAsync();
-            }
         }
     }
 }

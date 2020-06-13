@@ -6,7 +6,7 @@ install:
  - dotnet restore
 
 script:
- - dotnet build -c Release -p:Version="2.0.$TRAVIS_BUILD_NUMBER"
+ - dotnet build -c Release -p:Version="3.0.$TRAVIS_BUILD_NUMBER"
  - dotnet test
 
 deploy:

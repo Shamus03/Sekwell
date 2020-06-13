@@ -70,5 +70,36 @@ namespace Sekwell.Tests
             Assert.That(sql, Is.EqualTo(" SOME APPENDED VALUE"));
             Assert.That(parms, Is.Empty);
         }
+
+        [Test]
+        public void AppendRaw_RetainsArguments()
+        {
+            Statement query = new Statement($"SELECT * FROM SOME WHERE A={3}");
+            query = query.AppendRaw("AND B=2");
+            (string sql, object[] parms) = query.ToSql();
+
+            Assert.That(sql, Is.EqualTo("SELECT * FROM SOME WHERE A=? AND B=2"));
+            Assert.That(parms, Has.Length.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(parms[0], Is.EqualTo(3));
+            });
+        }
+
+        [Test]
+        public void AppendRaw_AppendArgument()
+        {
+            Statement query = new Statement($"SELECT * FROM SOME WHERE A={3}");
+            query = query.AppendRaw("AND B=?", 2);
+            (string sql, object[] parms) = query.ToSql();
+
+            Assert.That(sql, Is.EqualTo("SELECT * FROM SOME WHERE A=? AND B=?"));
+            Assert.That(parms, Has.Length.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(parms[0], Is.EqualTo(3));
+                Assert.That(parms[1], Is.EqualTo(2));
+            });
+        }
     }
 }

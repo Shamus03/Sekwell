@@ -32,10 +32,10 @@ namespace Sekwell
             return new Statement(fmt, args);
         }
 
-        public Statement AppendRaw(string str)
+        public Statement AppendRaw(string str, params object[] args)
         {
             string fmt = StatementFormat + " " + str;
-            return new Statement(fmt, new object[] { });
+            return new Statement(fmt, Arguments.Concat(args).ToArray());
         }
 
         public static Statement In<T>(IEnumerable<T> args)

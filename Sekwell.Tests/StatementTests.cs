@@ -61,6 +61,24 @@ namespace Sekwell.Tests
         }
 
         [Test]
+        public void Append()
+        {
+            var cond1 = new Statement($"A={3}");
+            var cond2 = new Statement($"B={2}");
+            Statement query = new Statement($"SELECT * FROM SOME WHERE {cond1}");
+            query = query.Append($"AND {cond2}");
+            (string sql, object[] parms) = query.ToSql();
+
+            Assert.That(sql, Is.EqualTo("SELECT * FROM SOME WHERE A=? AND B=?"));
+            Assert.That(parms, Has.Length.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(parms[0], Is.EqualTo(3));
+                Assert.That(parms[1], Is.EqualTo(2));
+            });
+        }
+
+        [Test]
         public void Append_Empty()
         {
             Statement query;
@@ -69,6 +87,23 @@ namespace Sekwell.Tests
 
             Assert.That(sql, Is.EqualTo(" SOME APPENDED VALUE"));
             Assert.That(parms, Is.Empty);
+        }
+
+        [Test]
+        public void AppendRaw()
+        {
+            var cond1 = new Statement($"A={3}");
+            Statement query = new Statement($"SELECT * FROM SOME WHERE {cond1}");
+            query = query.AppendRaw("AND B=?", 2);
+            (string sql, object[] parms) = query.ToSql();
+
+            Assert.That(sql, Is.EqualTo("SELECT * FROM SOME WHERE A=? AND B=?"));
+            Assert.That(parms, Has.Length.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(parms[0], Is.EqualTo(3));
+                Assert.That(parms[1], Is.EqualTo(2));
+            });
         }
 
         [Test]

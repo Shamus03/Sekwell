@@ -27,9 +27,14 @@ namespace Sekwell
 
         public Statement Append(FormattableString str)
         {
-            string fmt = StatementFormat + " " + str.Format;
+            string fmt = StatementFormat + " " + IncrementFormatArgs(str.Format, str.ArgumentCount, Arguments.Length);
             object[] args = Arguments.Concat(str.GetArguments()).ToArray();
             return new Statement(fmt, args);
+        }
+        
+        private static string IncrementFormatArgs(string fmt, int numArgs, int start)
+        {
+            return string.Format(fmt, Enumerable.Range(start, numArgs).Select(n => "{" + n + "}").ToArray());
         }
 
         public Statement AppendRaw(string str, params object[] args)
